@@ -1,0 +1,153 @@
+{
+  "project_name": "JMC Law Firm Website",
+  "design_philosophy": {
+    "theme": "light",
+    "archetype": "Swiss & High-Contrast mixed with Jewel & Luxury",
+    "vibe": "Professional, Minimal, Elegant, Trustworthy, Local Authority",
+    "core_values": [
+      "Clarity",
+      "Integrity",
+      "Excellence",
+      "Local Roots (Kosovo)"
+    ]
+  },
+  "typography": {
+    "font_family": {
+      "heading": "\"Playfair Display\", serif",
+      "body": "\"Lato\", sans-serif",
+      "mono": "\"JetBrains Mono\", monospace"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight",
+      "h2": "text-3xl md:text-4xl font-semibold tracking-tight",
+      "h3": "text-2xl md:text-3xl font-medium",
+      "body_large": "text-lg md:text-xl leading-relaxed",
+      "body_default": "text-base leading-relaxed text-gray-600",
+      "caption": "text-sm text-gray-500 uppercase tracking-widest"
+    },
+    "imports": [
+      "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap"
+    ]
+  },
+  "colors": {
+    "palette": {
+      "primary": "#2B2B2B",
+      "secondary": "#0B1C2D",
+      "accent": "#D4AF37",
+      "background": "#F8F5F0",
+      "surface": "#FFFFFF",
+      "text_primary": "#1A1A1A",
+      "text_secondary": "#4A4A4A",
+      "border": "#E5E5E5"
+    },
+    "usage": {
+      "header_bg": "#2B2B2B",
+      "footer_bg": "#0B1C2D",
+      "body_bg": "#F8F5F0",
+      "text_on_dark": "#F8F5F0",
+      "text_on_light": "#1A1A1A",
+      "accent_elements": "Buttons, Icons, Highlights"
+    }
+  },
+  "layout_strategies": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "spacing": {
+      "section_padding": "py-20 md:py-32",
+      "element_gap": "gap-8 md:gap-12"
+    },
+    "grid_system": {
+      "practice_areas": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
+      "features": "grid grid-cols-1 md:grid-cols-3 gap-12"
+    },
+    "z_index": {
+      "modal": 50,
+      "overlay": 40,
+      "dropdown": 30,
+      "header": 20,
+      "default": 1
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-[#D4AF37] text-white hover:bg-[#B59025] rounded-sm px-8 py-3 text-sm uppercase tracking-widest transition-all duration-300 font-bold shadow-md hover:shadow-lg",
+      "secondary": "border border-[#2B2B2B] text-[#2B2B2B] hover:bg-[#2B2B2B] hover:text-white rounded-sm px-8 py-3 text-sm uppercase tracking-widest transition-all duration-300",
+      "ghost": "text-[#D4AF37] hover:text-[#B59025] underline-offset-4 hover:underline transition-colors"
+    },
+    "cards": {
+      "practice_area": "bg-white p-8 border border-transparent hover:border-[#D4AF37]/30 shadow-sm hover:shadow-xl transition-all duration-300 group rounded-sm",
+      "feature": "bg-transparent text-center p-6"
+    },
+    "inputs": {
+      "default": "w-full bg-white border border-gray-200 focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37] rounded-sm px-4 py-3 outline-none transition-all"
+    },
+    "navigation": {
+      "navbar": "w-full bg-[#2B2B2B] text-white py-4 z-50",
+      "mobile_menu": "fixed inset-0 z-50 bg-[#2B2B2B]/95 backdrop-blur-xl transform transition-transform duration-300 ease-in-out"
+    }
+  },
+  "assets": {
+    "logo": {
+      "url": "/images/logo.jpg",
+      "alt": "JMC Law Firm Logo"
+    },
+    "hero_images": {
+      "home": "/images/hero-home.jpg",
+      "about": "/images/hero-about.jpg",
+      "practice": "/images/hero-practice.jpg"
+    },
+    "supplementary_images": {
+      "meeting": "https://images.unsplash.com/photo-1758520144427-ddb02ac74e9d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwyfHxidXNpbmVzcyUyMHBlb3BsZSUyMG1lZXRpbmclMjBoYW5kc2hha2UlMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzcyNTMyMDY1fDA&ixlib=rb-4.1.0&q=85",
+      "office": "https://images.unsplash.com/photo-1758448721205-8465cebc26af?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBsYXclMjBmaXJtJTIwdGVhbSUyMG1lZXRpbmclMjBlbGVnYW50JTIwb2ZmaWNlfGVufDB8fHx8MTc3MjUzMjA2MHww&ixlib=rb-4.1.0&q=85"
+    },
+    "icons": "Use 'lucide-react' library. Suggested icons: Scale, Gavel, Shield, Users, Briefcase, Building, Globe, FileText, MapPin, Phone, Mail."
+  },
+  "page_specifics": {
+    "home": {
+      "hero": "Full height. Background image (Prizren) with dark overlay (opacity 40-60%). Centered text: 'Justice & Management Consulting'. Quote: 'Excellence in every case.'",
+      "practice_preview": "Section title 'Our Expertise'. Grid of 8 cards. Each card has an icon, title, and short description. Hover effect lifts card.",
+      "cta_section": "Simple text banner with button 'Schedule a Consultation'."
+    },
+    "about": {
+      "hero": "Half height (50vh). Background (Kala). Title 'About JMC'.",
+      "mission_vision": "Interactive Tabs or Accordion component. Content: Mission, Vision, Values, Why Choose Us. Use Shadcn Tabs or Accordion.",
+      "who_we_are": "Two column layout. Text on left, Image (meeting) on right."
+    },
+    "practice_areas": {
+      "hero": "Half height (50vh). Background (Dukagjini). Title 'Practice Areas'.",
+      "grid": "Detailed grid of all practice areas. Click to expand or modal for details.",
+      "list": [
+        "Corporate Law",
+        "Real Estate",
+        "Intellectual Property",
+        "Labor Law",
+        "Litigation",
+        "Family Law",
+        "Criminal Defense",
+        "Banking & Finance"
+      ]
+    },
+    "contact": {
+      "hero": "Gradient background (Navy to Grey) or solid dark color. Title 'Contact Us'.",
+      "layout": "Split screen. Left: Contact Details (Address, Phone, Email) styled elegantly. Right: Google Maps embed (iframe).",
+      "map_address": "Rr. Qamil Hoxha nr.8, Prishtina 10000"
+    }
+  },
+  "technical_instructions": {
+    "framework": "React (Create React App structure)",
+    "styling": "Tailwind CSS",
+    "router": "react-router-dom",
+    "animations": "framer-motion (fade-in up, stagger children)",
+    "responsive": "Mobile-first. Hamburger menu on mobile (slide from right).",
+    "accessibility": "Ensure contrast ratios. Use semantic HTML. ARIA labels for icons."
+  },
+  "universal_guidelines": [
+    "Do not use gradients for text or backgrounds unless specified.",
+    "Use 2x-3x more padding than usual for a luxury feel.",
+    "Ensure all interactive elements have hover states.",
+    "Typography hierarchy must be strict. Playfair for headings, Lato for body.",
+    "No contact form on Contact page - use elegant typography for info display.",
+    "Navbar is NOT sticky - it scrolls with the page.",
+    "Footer must be Dark Navy (#0B1C2D).",
+    "All interactive elements must have data-testid attributes."
+  ]
+}

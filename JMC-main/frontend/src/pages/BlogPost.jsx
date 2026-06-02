@@ -1,0 +1,195 @@
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import usePageMeta from '../hooks/usePageMeta';
+import { motion } from 'framer-motion';
+import { ArrowLeft, Clock, Tag, ChevronRight } from 'lucide-react';
+import { blogPosts } from '../data/blogPosts';
+import ReactMarkdown from 'react-markdown';
+
+const mdComponents = {
+  h2: ({ children }) => (
+    <h2 className="font-serif text-2xl font-semibold text-[#1A1A1A] mt-10 mb-4">{children}</h2>
+  ),
+  p: ({ children }) => (
+    <p className="text-[#4A4A4A] leading-relaxed text-lg mb-4">{children}</p>
+  ),
+  strong: ({ children }) => (
+    <strong className="font-semibold text-[#1A1A1A]">{children}</strong>
+  ),
+  ul: ({ children }) => (
+    <ul className="list-disc list-inside space-y-1 ml-4 my-3">{children}</ul>
+  ),
+  li: ({ children }) => (
+    <li className="text-[#4A4A4A] leading-relaxed">{children}</li>
+  ),
+};
+
+const BlogPost = () => {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+
+  const post = blogPosts.find((p) => p.slug === slug);
+
+  usePageMeta(
+    post
+      ? {
+          title: post.title + ' | JMC Legal Blog',
+          description: post.excerpt,
+          canonical: 'https://jmclegal.org/blog/' + post.slug,
+          ogTitle: post.title,
+          ogDescription: post.excerpt,
+          ogUrl: 'https://jmclegal.org/blog/' + post.slug,
+          ogType: 'article',
+        }
+      : {
+          title: 'Article Not Found | JMC Legal Blog',
+          description: 'This article does not exist or has been removed.',
+          canonical: 'https://jmclegal.org/blog',
+        }
+  );
+
+  if (!post) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center px-4">
+        <h1 className="font-serif text-4xl font-bold text-[#1A1A1A] mb-2">Article Not Found</h1>
+        <p className="text-[#4A4A4A] mb-6">This article doesn't exist or has been removed.</p>
+        <Link to="/blog" className="text-[#D4AF37] font-semibold hover:text-[#B59025] transition-colors">
+          Back to Blog
+        </Link>
+      </div>
+    );
+  }
+
+  const related = blogPosts.filter((p) => p.slug !== slug && p.category === post.category).slice(0, 2);
+
+  return (
+    <div>
+      {/* Top gradient banner */}
+      <div className="bg-gradient-to-br from-[#1A1A1A] via-[#2B2B2B] to-[#3A3A3A] pt-20 pb-16 px-4">
+        <div className="max-w-3xl mx-auto">
+          {/* Back link */}
+          <button
+            onClick={() => navigate('/blog')}
+            className="inline-flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] text-sm uppercase tracking-widest transition-colors mb-8"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            All Articles
+          </button>
+
+          {/* Category + date */}
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
+              <Tag className="w-3 h-3" />
+              {post.category}
+            </span>
+            <span className="text-gray-400 text-xs">
+              {new Date(post.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </span>
+            <span className="flex items-center gap-1.5 text-gray-400 text-xs">
+              <Clock className="w-3 h-3" />
+              {post.readTime}
+            </span>
+          </div>
+
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight"
+          >
+            {post.title}
+          </motion.h1>
+
+          {/* Author */}
+          <p className="mt-6 text-gray-400 text-sm">By {post.author}</p>
+        </div>
+      </div>
+
+      {/* Article body */}
+      <section className="bg-[#F8F5F0] py-16">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-white rounded-sm shadow-sm border border-[#E5E5E5] p-8 md:p-12"
+          >
+            {/* Excerpt / lead */}
+            <p className="text-[#4A4A4A] text-xl leading-relaxed font-medium border-l-4 border-[#D4AF37] pl-5 mb-8 italic">
+              {post.excerpt}
+            </p>
+
+            {/* Content */}
+            <div className="prose-jmc">
+              <ReactMarkdown components={mdComponents}>{post.content}</ReactMarkdown>
+            </div>
+
+            {/* Disclaimer */}
+            <div className="mt-12 p-5 bg-[#F8F5F0] rounded-sm border border-[#E5E5E5] text-xs text-[#9A9A9A] leading-relaxed">
+              <strong className="text-[#4A4A4A]">Disclaimer:</strong> This article is for informational purposes only and does not constitute legal advice. For advice specific to your situation, please contact a qualified attorney.
+            </div>
+          </motion.div>
+
+          {/* CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mt-10 bg-[#2B2B2B] rounded-sm p-8 text-center"
+          >
+            <h3 className="font-serif text-2xl font-semibold text-white mb-3">
+              Need Legal Advice on This Topic?
+            </h3>
+            <p className="text-gray-400 text-sm mb-6">
+              Our attorneys are available to advise you on your specific situation.
+            </p>
+            <Link
+              to="/contact"
+              className="inline-block bg-[#D4AF37] text-white hover:bg-[#B59025] rounded-sm px-8 py-3 text-sm uppercase tracking-widest font-bold transition-all duration-300"
+            >
+              Schedule a Consultation
+            </Link>
+          </motion.div>
+
+          {/* Related articles */}
+          {related.length > 0 && (
+            <div className="mt-16">
+              <h3 className="font-serif text-2xl font-semibold text-[#1A1A1A] mb-8">Related Articles</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {related.map((rp) => (
+                  <Link
+                    key={rp.slug}
+                    to={`/blog/${rp.slug}`}
+                    className="group bg-white rounded-sm border border-[#E5E5E5] p-6 hover:border-[#D4AF37]/40 hover:shadow-md transition-all duration-300"
+                  >
+                    <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">{rp.category}</span>
+                    <h4 className="font-serif text-lg font-semibold text-[#1A1A1A] mt-2 mb-3 leading-snug group-hover:text-[#D4AF37] transition-colors">
+                      {rp.title}
+                    </h4>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
+                      Read <ChevronRight className="w-3 h-3" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Back to blog */}
+          <div className="mt-12 text-center">
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-[#4A4A4A] hover:text-[#D4AF37] text-sm uppercase tracking-widest font-semibold transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to All Articles
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default BlogPost;
