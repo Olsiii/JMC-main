@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const SCROLL_THRESHOLD = 200;
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -13,14 +15,28 @@ const navLinks = [
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
   return (
+    <>
     <nav 
-      className="sticky top-0 z-50 w-full bg-[#2B2B2B] text-white py-4 px-4 sm:px-6 lg:px-8"
+      className={`fixed top-0 left-0 right-0 z-50 w-full text-white py-4 px-4 sm:px-6 lg:px-8 transition-colors duration-500 ease-in-out ${
+        isScrolled ? 'bg-[#2B2B2B]' : 'bg-transparent'
+      }`}
       data-testid="navbar"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -121,5 +137,6 @@ export const Navbar = () => {
         )}
       </AnimatePresence>
     </nav>
+    </>
   );
 };

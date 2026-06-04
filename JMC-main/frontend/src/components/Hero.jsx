@@ -108,7 +108,7 @@ export const Hero = ({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className={contentOnLeft ? 'space-y-12 pl-[30px] sm:pl-12 flex flex-col items-start' : 'space-y-6'}
+          className={contentOnLeft ? 'space-y-12 flex flex-col items-start' : 'space-y-6'}
         >
           {contentOrder}
 

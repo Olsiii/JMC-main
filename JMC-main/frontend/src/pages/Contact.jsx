@@ -88,9 +88,9 @@ const ContactPage = () => {
     <div data-testid="contact-page">
       {/* Hero Section */}
       <Hero
+        backgroundImage="/images/Xhami.webp"
         title="Contact Us"
         subtitle="We're here to help with your legal needs"
-        gradient={true}
         fullHeight={false}
         showLogo={true}
       />
@@ -336,7 +336,7 @@ const ContactPage = () => {
                     >
                       {status === 'sending' ? (
                         <>
-                          <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                          <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" aria-label="Sending message" role="status" />
                           Sending…
                         </>
                       ) : (

@@ -80,9 +80,9 @@ const BlogPage = () => {
     <div>
       {/* Hero */}
       <Hero
+        backgroundImage="/images/Bibloteka.webp"
         title="Legal Insights"
         subtitle="Expert commentary on law, business, and regulatory developments in Kosovo"
-        gradient={true}
         fullHeight={false}
       />
 

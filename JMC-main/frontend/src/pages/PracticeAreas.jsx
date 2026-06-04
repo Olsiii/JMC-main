@@ -18,7 +18,7 @@ const PracticeAreasPage = () => {
     <div data-testid="practice-areas-page">
       {/* Hero Section */}
       <Hero
-        backgroundImage="/images/Dukagjini2.jpg"
+        backgroundImage="/images/Dukagjini2.webp"
         title="Practice Areas"
         subtitle="Comprehensive legal services tailored to your needs"
         fullHeight={false}

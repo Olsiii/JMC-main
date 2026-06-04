@@ -1,8 +1,41 @@
-import { motion } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Hero } from '../components/Hero';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Target, Eye, Heart, Award } from 'lucide-react';
 import usePageMeta from '../hooks/usePageMeta';
+
+const CountUp = ({ end, duration = 2000, suffix = '+' }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    const startTime = performance.now();
+    let rafId;
+
+    const tick = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      setCount(Math.round(eased * end));
+      if (progress < 1) {
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isInView, end, duration]);
+
+  return (
+    <p ref={ref} className="font-serif text-3xl font-bold text-[#D4AF37]">
+      {count}
+      {suffix}
+    </p>
+  );
+};
 
 const tabContent = {
   mission: {
@@ -40,7 +73,7 @@ const AboutPage = () => {
     <div data-testid="about-page">
       {/* Hero Section */}
       <Hero
-        backgroundImage="/images/Kala.jpg"
+        backgroundImage="/images/Kala.webp"
         title="About JMC"
         subtitle="Your trusted legal partner since establishment"
         fullHeight={false}
@@ -155,11 +188,11 @@ const AboutPage = () => {
               </p>
               <div className="grid grid-cols-2 gap-6 pt-4">
                 <div className="text-center p-4 bg-[#F8F5F0] rounded-sm">
-                  <p className="font-serif text-3xl font-bold text-[#D4AF37]">5+</p>
+                  <CountUp end={7} suffix="" />
                   <p className="text-sm text-[#4A4A4A] mt-1">Years Experience</p>
                 </div>
                 <div className="text-center p-4 bg-[#F8F5F0] rounded-sm">
-                  <p className="font-serif text-3xl font-bold text-[#D4AF37]">50+</p>
+                  <CountUp end={50} suffix="" />
                   <p className="text-sm text-[#4A4A4A] mt-1">Cases Handled</p>
                 </div>
               </div>

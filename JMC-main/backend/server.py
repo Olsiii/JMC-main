@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -33,8 +34,14 @@ db = client[_db_name]
 # Rate limiter
 limiter = Limiter(key_func=get_remote_address)
 
+# Lifespan: replaces deprecated @app.on_event
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    client.close()
+
 # Create the main app without a prefix
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
@@ -100,6 +107,3 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
