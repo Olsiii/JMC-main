@@ -8,6 +8,7 @@ import PracticeAreasPage from './pages/PracticeAreas';
 import ContactPage from './pages/Contact';
 import BlogPage from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import { LanguageProvider } from './context/LanguageContext';
 import './App.css';
 
 function NotFoundPage() {
@@ -24,6 +25,7 @@ function NotFoundPage() {
 
 function App() {
   return (
+    <LanguageProvider>
     <div className="App min-h-screen flex flex-col">
       <BrowserRouter>
         <ScrollToTop />
@@ -43,6 +45,7 @@ function App() {
         <Footer />
       </BrowserRouter>
     </div>
+    </LanguageProvider>
   );
 }
 
