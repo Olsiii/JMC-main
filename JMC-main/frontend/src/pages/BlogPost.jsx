@@ -1,7 +1,8 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useState, useCallback } from 'react';
 import usePageMeta from '../hooks/usePageMeta';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, Tag, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Clock, Tag, ChevronRight, Link2, Download, Check } from 'lucide-react';
 import { blogPosts } from '../data/blogPosts';
 import { useLang } from '../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
@@ -49,6 +50,169 @@ const LanguageToggle = () => {
     </button>
   );
 };
+
+// ─── helpers ──────────────────────────────────────────────────────────────────
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  let currentY = y;
+  for (let i = 0; i < words.length; i++) {
+    const testLine = line + words[i] + ' ';
+    if (ctx.measureText(testLine).width > maxWidth && i > 0) {
+      ctx.fillText(line.trim(), x, currentY);
+      line = words[i] + ' ';
+      currentY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line.trim(), x, currentY);
+  return currentY;
+}
+
+function generateInstagramCard(title, excerpt, category, url) {
+  const SIZE = 1080;
+  const GOLD = '#D4AF37';
+  const DARK = '#1A1A1A';
+  const MID  = '#2B2B2B';
+  const LIGHT = '#F8F5F0';
+  const PAD = 80;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = SIZE;
+  canvas.height = SIZE;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = DARK;
+  ctx.fillRect(0, 0, SIZE, SIZE);
+
+  // Bottom light panel
+  ctx.fillStyle = LIGHT;
+  ctx.fillRect(0, SIZE * 0.62, SIZE, SIZE * 0.38);
+
+  // Gold top bar
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(0, 0, SIZE, 12);
+
+  // Gold left accent bar (tall)
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(PAD, 80, 6, 340);
+
+  // Category label
+  ctx.fillStyle = GOLD;
+  ctx.font = 'bold 32px Georgia, serif';
+  ctx.letterSpacing = '4px';
+  ctx.fillText(category.toUpperCase(), PAD + 30, 130);
+
+  // Title
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 64px Georgia, serif';
+  const titleBottom = wrapText(ctx, title, PAD + 30, 210, SIZE - PAD * 2 - 30, 80) + 80;
+
+  // Divider
+  ctx.fillStyle = GOLD;
+  ctx.fillRect(PAD, Math.min(titleBottom, SIZE * 0.58), 60, 4);
+
+  // Excerpt (on light background)
+  const excerptY = SIZE * 0.64 + 20;
+  ctx.fillStyle = '#4A4A4A';
+  ctx.font = '34px Georgia, serif';
+  wrapText(ctx, excerpt, PAD, excerptY, SIZE - PAD * 2, 50);
+
+  // URL / branding footer
+  ctx.fillStyle = MID;
+  ctx.fillRect(0, SIZE - 100, SIZE, 100);
+
+  ctx.fillStyle = GOLD;
+  ctx.font = 'bold 28px Arial, sans-serif';
+  ctx.fillText('JMC LEGAL', PAD, SIZE - 52);
+
+  ctx.fillStyle = '#9A9A9A';
+  ctx.font = '24px Arial, sans-serif';
+  ctx.fillText(url, PAD + 220, SIZE - 52);
+
+  return canvas;
+}
+
+// ─── ShareButtons ─────────────────────────────────────────────────────────────
+
+const ShareButtons = ({ title, excerpt, category, lang }) => {
+  const [copied, setCopied] = useState(false);
+  const [generating, setGenerating] = useState(false);
+
+  const url = window.location.href;
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+      const el = document.createElement('textarea');
+      el.value = url;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }, [url]);
+
+  const handleInstagram = useCallback(() => {
+    setGenerating(true);
+    setTimeout(() => {
+      try {
+        const canvas = generateInstagramCard(title, excerpt, category, 'jmclegal.org');
+        const link = document.createElement('a');
+        link.download = 'jmc-legal-post.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } finally {
+        setGenerating(false);
+      }
+    }, 50);
+  }, [title, excerpt, category]);
+
+  const copyLabel   = lang === 'en' ? (copied ? 'Copied!'      : 'Copy Link')          : (copied ? 'U kopjua!'   : 'Kopjo Linkun');
+  const igLabel     = lang === 'en' ? (generating ? 'Generating…' : 'Download') : (generating ? 'Duke gjeneruar…' : 'Shkarko');
+
+  return (
+    <div className="flex flex-wrap items-center gap-3 mt-6">
+      <span className="text-xs uppercase tracking-widest text-gray-400 mr-1">
+        {lang === 'en' ? 'Share:' : 'Ndaj:'}
+      </span>
+
+      {/* Copy Link */}
+      <button
+        onClick={handleCopy}
+        className={`inline-flex items-center gap-2 px-4 py-2 rounded-sm border text-xs font-semibold uppercase tracking-widest transition-all duration-200 ${
+          copied
+            ? 'bg-[#D4AF37] border-[#D4AF37] text-white'
+            : 'bg-transparent border-gray-500 text-gray-300 hover:border-[#D4AF37] hover:text-[#D4AF37]'
+        }`}
+      >
+        {copied ? <Check className="w-3.5 h-3.5" /> : <Link2 className="w-3.5 h-3.5" />}
+        {copyLabel}
+      </button>
+
+      {/* Instagram image download */}
+      <button
+        onClick={handleInstagram}
+        disabled={generating}
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-sm border border-gray-500 text-gray-300 hover:border-[#D4AF37] hover:text-[#D4AF37] text-xs font-semibold uppercase tracking-widest transition-all duration-200 disabled:opacity-60"
+      >
+        <Download className="w-3.5 h-3.5" />
+        {igLabel}
+      </button>
+    </div>
+  );
+};
+
+// ─── BlogPost ─────────────────────────────────────────────────────────────────
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -152,6 +316,14 @@ const BlogPost = () => {
 
           {/* Author */}
           <p className="mt-6 text-gray-400 text-sm">{ui.by} {post.author}</p>
+
+          {/* Share */}
+          <ShareButtons
+            title={t?.title || post.title}
+            excerpt={t?.excerpt || post.excerpt}
+            category={t?.category || post.category}
+            lang={lang}
+          />
         </div>
       </div>
 
