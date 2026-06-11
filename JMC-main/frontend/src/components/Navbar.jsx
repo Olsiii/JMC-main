@@ -34,7 +34,7 @@ export const Navbar = () => {
   return (
     <>
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 w-full text-white py-4 px-4 sm:px-6 lg:px-8 transition-colors duration-500 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full text-white py-6 px-4 sm:px-6 lg:px-8 transition-colors duration-500 ease-in-out ${
         isScrolled ? 'bg-[#2B2B2B]' : 'bg-transparent'
       }`}
       data-testid="navbar"
@@ -99,11 +99,11 @@ export const Navbar = () => {
             data-testid="mobile-menu-panel"
           >
             {/* Panel Content */}
-            <div className="h-full bg-[#2B2B2B]/95 backdrop-blur-sm flex flex-col pt-20 px-6">
+            <div className="relative h-full bg-[#2B2B2B]/95 backdrop-blur-sm flex flex-col justify-center items-center px-6">
               {/* Close Button */}
               <button
                 onClick={closeMenu}
-                className="absolute top-4 right-4 p-2 text-white hover:text-[#D4AF37] transition-colors"
+                className="absolute top-6 right-4 p-2 text-white hover:text-[#D4AF37] transition-colors"
                 data-testid="mobile-menu-close"
                 aria-label="Close menu"
               >
@@ -111,7 +111,7 @@ export const Navbar = () => {
               </button>
 
               {/* Navigation Links */}
-              <nav className="flex flex-col gap-6">
+              <nav className="flex flex-col items-center gap-6 text-center">
                 {navLinks.map((link, index) => (
                   <motion.div
                     key={link.path}

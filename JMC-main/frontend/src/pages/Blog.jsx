@@ -128,7 +128,7 @@ const BlogPage = () => {
     heroTitle: lang === 'en' ? 'Legal Insights' : 'Artikuj Juridikë',
     heroSubtitle: lang === 'en'
       ? 'Expert commentary on law, business, and regulatory developments in Kosovo'
-      : 'Komentim ekspert mbi ligjin, biznesin dhe zhvillimet rregullatore në Kosovë',
+      : 'Ekspertizë ligjore dhe vështrime strategjike mbi ndryshimet rregullatore dhe biznesin në Kosovë.',
     ctaTitle: lang === 'en' ? 'Have a Legal Question?' : 'Keni Pyetje Juridike?',
     ctaBody: lang === 'en'
       ? 'Our articles are for informational purposes. For advice specific to your situation, speak with one of our attorneys.'
