@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>JMC Legal — Content manager</title>
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+      #gate {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: #f4f2ee;
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        color: #14171b;
+      }
+      #gate[hidden] { display: none; }
+      #gate form { width: 100%; max-width: 340px; }
+      #gate img { display: block; height: 20px; margin-bottom: 40px; }
+      #gate label { display: block; font-size: 13px; color: #4f5862; margin-bottom: 8px; }
+      #gate input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 0;
+        border: 0;
+        border-bottom: 1px solid #14171b;
+        background: transparent;
+        font-size: 18px;
+        color: #14171b;
+      }
+      #gate button {
+        margin-top: 28px;
+        width: 100%;
+        min-height: 48px;
+        border: 0;
+        background: #14171b;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+      #gate button:hover { background: #8e1b2e; }
+      #gate button:disabled { opacity: 0.6; cursor: wait; }
+      #gate :focus-visible { outline: 1px solid #8e1b2e; outline-offset: 3px; }
+      #gate-error { min-height: 20px; margin: 16px 0 0; font-size: 14px; color: #8e1b2e; }
+    </style>
+  </head>
+  <body>
+    <div id="gate" hidden>
+      <form>
+        <img src="/images/JMC_Legal_Logo_dark.svg" alt="JMC Legal" />
+        <label for="gate-password">Password</label>
+        <input id="gate-password" type="password" autocomplete="current-password" required autofocus />
+        <button type="submit">Sign in</button>
+        <p id="gate-error" role="alert"></p>
+      </form>
+    </div>
+
+    <script>
+      // Sign-in for the CMS. The password is checked by the server (/api/cms), which returns a
+      // session token; every CMS request then carries it. Decap CMS loads only after sign-in.
+      (function () {
+        var API = '/api/cms';
+        var KEY = 'jmc-cms-session';
+        var DECAP = 'https://unpkg.com/decap-cms@3.17.3/dist/decap-cms.js';
+
+        function token() {
+          var t = sessionStorage.getItem(KEY) || '';
+          return Number(t.split('.')[0]) > Date.now() ? t : null;
+        }
+
+        function isApi(input) {
+          var url = typeof input === 'string' ? input : input && input.url;
+          return url && new URL(url, location.href).pathname === API;
+        }
+
+        // Add the session to Decap's requests; on an expired session, ask for the password again.
+        var nativeFetch = window.fetch.bind(window);
+        window.fetch = function (input, init) {
+          if (!isApi(input)) return nativeFetch(input, init);
+          init = init || {};
+          var headers = new Headers(init.headers || {});
+          headers.set('Authorization', 'Bearer ' + token());
+          return nativeFetch(input, Object.assign({}, init, { headers: headers })).then(function (res) {
+            if (res.status === 401) {
+              sessionStorage.removeItem(KEY);
+              location.reload();
+            }
+            return res;
+          });
+        };
+
+        function startCms() {
+          // Decap's proxy backend has its own "Login" button; the password gate replaces it.
+          localStorage.setItem('decap-cms-user', JSON.stringify({ backendName: 'proxy' }));
+          var script = document.createElement('script');
+          script.src = DECAP;
+          document.body.appendChild(script);
+        }
+
+        if (token()) return startCms();
+
+        var gate = document.getElementById('gate');
+        var form = gate.querySelector('form');
+        var input = document.getElementById('gate-password');
+        var button = form.querySelector('button');
+        var error = document.getElementById('gate-error');
+        gate.hidden = false;
+        input.focus();
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          button.disabled = true;
+          error.textContent = '';
+          nativeFetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'login', password: input.value }),
+          })
+            .then(function (res) {
+              return res.json().then(function (body) {
+                if (!res.ok) throw new Error(body.error || 'Sign-in failed.');
+                sessionStorage.setItem(KEY, body.token);
+                gate.remove();
+                startCms();
+              });
+            })
+            .catch(function (err) {
+              error.textContent = err.message === 'Failed to fetch' ? 'Could not reach the server.' : err.message;
+              button.disabled = false;
+              input.select();
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

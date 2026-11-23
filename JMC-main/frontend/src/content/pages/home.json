@@ -1,0 +1,15 @@
+{
+  "showLatestInsight": true,
+  "hero": {
+    "image": "/images/Bibloteka.webp",
+    "title": "Justice & Management Consulting",
+    "subtitle": "Attorneys at law · Prishtina"
+  },
+  "intro": "JMC Legal was founded by three legal practitioners with more than seven years of work in legal offices and institutional practice. We provide strategic, results-oriented legal services to businesses and individuals, with a focus on risk prevention, legal protection and effective representation. Our work is guided by integrity, precision and confidentiality, and our aim is simple: clear legal solutions and long-term trust with every client.",
+  "office": {
+    "title": "Based in Prishtina",
+    "text": "We act for clients across Kosovo from our office in the centre of Prishtina, before courts, inspectorates and regulators throughout the country.",
+    "image": "/images/Gjami.webp",
+    "imageAlt": "Aerial view of central Prishtina"
+  }
+}

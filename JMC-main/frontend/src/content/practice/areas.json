@@ -1,0 +1,213 @@
+{
+  "areas": [
+    {
+      "title": "Corporate Law",
+      "slug": "corporate-law",
+      "titleSq": "E drejta korporative",
+      "group": "corporate",
+      "audience": [
+        "business"
+      ],
+      "featured": true,
+      "description": "We advise companies on governance, restructuring, mergers and acquisitions, due diligence and risk management, so their operations are strong and compliant.",
+      "intro": "Governance, restructuring, M&A, due diligence and risk management, so operations are strong and compliant.",
+      "keyServices": [
+        "Corporate governance",
+        "Restructuring of companies",
+        "Mergers & acquisitions",
+        "Due diligence"
+      ],
+      "services": [
+        "Corporate governance principles",
+        "Restructuring of companies",
+        "Mergers & acquisitions and transaction documents",
+        "Legal advisor on M&A transactions",
+        "Due diligence",
+        "Risk management"
+      ]
+    },
+    {
+      "title": "Competition Law",
+      "slug": "competition-law",
+      "titleSq": "Konkurrenca",
+      "group": "corporate",
+      "audience": [
+        "business"
+      ],
+      "featured": false,
+      "description": "We help businesses comply with competition rules, prevent unfair trade practices, and represent clients before regulatory authorities in competition and state aid matters.",
+      "intro": "Compliance with competition rules, unfair trade practices, and representation before the regulator.",
+      "keyServices": [],
+      "services": [
+        "Unfair trade",
+        "Impact of competition law on your business",
+        "Infrastructure",
+        "Representation before the Competition Commission",
+        "Abuse of a dominant position",
+        "State aid"
+      ]
+    },
+    {
+      "title": "Business & Property Law",
+      "slug": "business-property-law",
+      "titleSq": "Biznesi dhe prona",
+      "group": "corporate",
+      "audience": [
+        "business",
+        "individual"
+      ],
+      "featured": false,
+      "description": "We support businesses by structuring contracts, protecting assets, managing property matters, and safeguarding their legal and financial interests.",
+      "intro": "Protecting the rights, assets and interests of Kosovan and foreign clients in their business and property.",
+      "keyServices": [],
+      "services": [
+        "Contracts and contractual relations",
+        "General business terms",
+        "Protection of assets",
+        "Property structure and risk areas",
+        "Contractual due diligence",
+        "Creditors enforcing their rights"
+      ]
+    },
+    {
+      "title": "Tax Law",
+      "slug": "tax-law",
+      "titleSq": "Tatimet",
+      "group": "tax",
+      "audience": [
+        "business",
+        "individual"
+      ],
+      "featured": true,
+      "description": "We provide tax advice on transactions, direct and indirect tax compliance, and represent clients in disputes with the Tax Administration and Customs.",
+      "intro": "Tax advice on transactions, direct and indirect tax compliance, and disputes with the Tax Administration and Customs.",
+      "keyServices": [
+        "M&A and asset transfers",
+        "Corporate income tax and VAT",
+        "Cross-border trade",
+        "Tax and customs disputes"
+      ],
+      "services": [
+        "M&A and asset transfers",
+        "Real estate projects",
+        "Cross-border and international trade",
+        "Corporate income tax",
+        "VAT",
+        "Tax and customs disputes"
+      ]
+    },
+    {
+      "title": "Energy Law",
+      "slug": "energy-law",
+      "titleSq": "Energjia",
+      "group": "tax",
+      "audience": [
+        "business"
+      ],
+      "featured": false,
+      "description": "We advise on regulatory and market frameworks governing electricity generation, distribution, renewable energy, and energy market operations.",
+      "intro": "The legislative and institutional framework of the Kosovo electricity sector and its markets.",
+      "keyServices": [],
+      "services": [
+        "Generation capacity",
+        "Renewables: wind, solar, biomass",
+        "Transmission and distribution separation",
+        "Access charges",
+        "Retail competition",
+        "Wholesale electricity markets"
+      ]
+    },
+    {
+      "title": "Public Procurement",
+      "slug": "public-procurement",
+      "titleSq": "Prokurimi publik",
+      "group": "tax",
+      "audience": [
+        "business"
+      ],
+      "featured": false,
+      "description": "We assist clients in meeting participation requirements, preparing proposals, and representing them in procurement objection procedures.",
+      "intro": "Meeting participation requirements, preparing proposals and pursuing objections.",
+      "keyServices": [],
+      "services": [
+        "Participation conditions and criteria",
+        "Proposal preparation",
+        "Objection procedures"
+      ]
+    },
+    {
+      "title": "Labor Law",
+      "slug": "labor-law",
+      "titleSq": "Marrëdhëniet e punës",
+      "group": "employment",
+      "audience": [
+        "business",
+        "individual"
+      ],
+      "featured": true,
+      "description": "We guide employers through employment matters, regulatory compliance, internal policies and disciplinary decisions, and represent them in labor disputes.",
+      "intro": "Employment matters, internal policies and disciplinary decisions, and representation in labor disputes.",
+      "keyServices": [
+        "Employment contracts",
+        "Internal acts and rules",
+        "Disciplinary measures",
+        "Labor disputes"
+      ],
+      "services": [
+        "Case-by-case advice",
+        "Internal acts and rules",
+        "Employment contracts",
+        "Disciplinary measures",
+        "Labor Inspectorate and courts"
+      ]
+    },
+    {
+      "title": "Family Law",
+      "slug": "family-law",
+      "titleSq": "E drejta familjare",
+      "group": "employment",
+      "audience": [
+        "individual"
+      ],
+      "featured": false,
+      "description": "We provide strategic and considerate legal support in divorce, custody, support, property division and other family matters.",
+      "intro": "Strategic and considerate support at important moments in people’s lives.",
+      "keyServices": [],
+      "services": [
+        "Divorce and separation",
+        "Custody and visitation",
+        "Child and spousal support",
+        "Prenuptial agreements",
+        "Adoption and guardianship",
+        "Protection orders",
+        "Division of property"
+      ]
+    },
+    {
+      "title": "Litigation",
+      "slug": "litigation",
+      "titleSq": "Kontestet",
+      "group": "disputes",
+      "audience": [
+        "business",
+        "individual"
+      ],
+      "featured": true,
+      "description": "We represent clients in disputes with strategic, cost-effective solutions, pursuing the best possible outcome through negotiation or court proceedings.",
+      "intro": "We seek to avoid court where possible; where litigation is unavoidable, we manage it carefully and cost-efficiently.",
+      "keyServices": [
+        "Pre-litigation strategy",
+        "Alternative dispute resolution",
+        "Court representation",
+        "Enforcement"
+      ],
+      "services": [
+        "Pre-litigation strategy",
+        "Negotiation",
+        "Alternative dispute resolution",
+        "Court representation",
+        "Enforcement"
+      ]
+    }
+  ]
+}

@@ -1,111 +1,158 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-primary: #2B2B2B;
-  --color-secondary: #0B1C2D;
-  --color-accent: #D4AF37;
-  --color-background: #F8F5F0;
-  --color-surface: #FFFFFF;
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #4A4A4A;
-  --color-border: #E5E5E5;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Lato', sans-serif;
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', serif;
-}
-
 @layer base {
   :root {
-    --background: 30 20% 97%;
-    --foreground: 0 0% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
-    --primary: 0 0% 17%;
-    --primary-foreground: 30 20% 97%;
-    --secondary: 210 60% 11%;
-    --secondary-foreground: 30 20% 97%;
-    --muted: 30 10% 90%;
-    --muted-foreground: 0 0% 29%;
-    --accent: 43 67% 52%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 43 67% 52%;
-    --radius: 0.25rem;
-  }
-}
+    /* Brand tokens (RGB channels, consumed by tailwind.config.js) */
+    --ink: 20 23 27;          /* #14171B */
+    --text: 31 42 54;         /* #1F2A36 */
+    --muted: 79 88 98;        /* #4F5862 */
+    --subtle: 106 114 123;    /* #6A727B */
+    --line: 228 225 219;      /* #E4E1DB */
+    --line-strong: 207 202 193; /* #CFCAC1 */
+    --stone: 236 234 229;     /* #ECEAE5 */
+    --paper: 244 242 238;     /* #F4F2EE */
+    --accent: 142 27 46;      /* #8E1B2E */
 
-@layer base {
+    /* shadcn/ui variables, mapped onto the brand palette */
+    --background: 0 0% 100%;
+    --foreground: 211 27% 17%;
+    --card: 0 0% 100%;
+    --card-foreground: 211 27% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 211 27% 17%;
+    --primary: 214 15% 9%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 21% 95%;
+    --secondary-foreground: 214 15% 9%;
+    --muted-foreground: 212 11% 35%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 350 68% 33%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 14% 88%;
+    --input: 40 14% 88%;
+    --ring: 350 68% 33%;
+    --radius: 0rem;
+  }
+
   * {
     @apply border-border;
   }
+
+  html {
+    scroll-behavior: smooth;
+    /* Keep anchored sections clear of the sticky header (76px, 96px from lg). */
+    scroll-padding-top: 76px;
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      scroll-padding-top: 96px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white font-sans text-text antialiased;
+    font-weight: 400;
+  }
+
+  ::selection {
+    background-color: rgb(var(--accent));
+    color: white;
+  }
+
+  :focus-visible {
+    outline: 1px solid rgb(var(--accent));
+    outline-offset: 3px;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-secondary);
-}
-
-/* Animation classes */
-.fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-container px-6 md:px-10;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-/* Transition utilities */
-.transition-smooth {
-  transition: all 0.3s ease-in-out;
+  /* Small caps labels */
+  .label-caps {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* The burgundy "|" from the "JMC | Legal" brand, before section titles */
+  .mark {
+    display: inline-block;
+    flex: none;
+    width: 2px;
+    height: 0.82em;
+    margin-right: 0.5em;
+    background-color: rgb(var(--accent));
+  }
+
+  .mark-sm {
+    display: inline-block;
+    flex: none;
+    width: 1.5px;
+    height: 14px;
+    margin-right: 14px;
+    background-color: rgb(var(--accent));
+  }
+
+  /* "more" style links: lowercase, 1px underline */
+  .link-more {
+    @apply inline-block border-b border-current pb-px text-sm lowercase text-ink transition-colors duration-200 hover:text-accent;
+  }
+
+  .link-line {
+    @apply border-b border-current pb-px transition-colors duration-200 hover:text-accent;
+  }
+
+  .btn {
+    @apply label-caps inline-flex min-h-[48px] items-center justify-center px-6 py-3 text-center transition-colors duration-200;
+  }
+
+  .btn-solid {
+    @apply btn bg-ink text-white hover:bg-accent;
+  }
+
+  .btn-outline {
+    @apply btn border border-ink text-ink hover:bg-ink hover:text-white;
+  }
+
+  /* One photographic treatment across the site: greyscale, slight warm tone, reduced brightness */
+  .img-treat {
+    filter: grayscale(1) sepia(0.14) brightness(0.86) contrast(1.04);
+  }
+
+  /* Fields drawn inside their own border/underline: show the focus ring on the wrapper instead */
+  .focus-box:focus-within {
+    outline: 1px solid rgb(var(--accent));
+    outline-offset: 3px;
+  }
+
+  .focus-box :focus-visible {
+    outline: none;
+  }
+
+  .small-caps {
+    font-variant-caps: small-caps;
+  }
+
+  .field {
+    @apply w-full rounded-none border-0 border-b border-ink bg-transparent px-0 py-2 text-base text-ink placeholder:text-subtle;
+  }
+
+  .field:focus {
+    @apply border-accent;
+    box-shadow: none;
+  }
 }

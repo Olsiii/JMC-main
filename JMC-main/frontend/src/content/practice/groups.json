@@ -1,0 +1,20 @@
+{
+  "groups": [
+    {
+      "id": "corporate",
+      "title": "Corporate & Commercial"
+    },
+    {
+      "id": "tax",
+      "title": "Tax & Regulatory"
+    },
+    {
+      "id": "employment",
+      "title": "Employment & Family"
+    },
+    {
+      "id": "disputes",
+      "title": "Disputes"
+    }
+  ]
+}

@@ -1,0 +1,316 @@
+# Decap CMS configuration for jmclegal.org/admin
+# Docs: https://decapcms.org/docs/configuration-options/
+#
+# Sign-in is a password checked by the server function behind /api/cms (see frontend/cms-api).
+# Every save is a commit to the GitHub repository; the host then rebuilds the site (a few
+# minutes). Paths are relative to the repository root.
+
+backend:
+  name: proxy
+  proxy_url: /api/cms
+  branch: main
+  commit_messages:
+    create: 'CMS: add {{collection}} “{{slug}}”'
+    update: 'CMS: update {{collection}} “{{slug}}”'
+    delete: 'CMS: delete {{collection}} “{{slug}}”'
+    uploadMedia: 'CMS: upload “{{path}}”'
+    deleteMedia: 'CMS: delete “{{path}}”'
+
+site_url: https://jmclegal.org
+display_url: https://jmclegal.org
+logo_url: /images/JMC_Legal_Logo_dark.svg
+
+# Images uploaded in the CMS. Photos must be under 4 MB each.
+media_folder: JMC-main/frontend/public/images/uploads
+public_folder: /images/uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+collections:
+  # ─── Articles ──────────────────────────────────────────────────────────────
+  - name: insights
+    label: Articles
+    label_singular: Article
+    description: >
+      Articles shown under Insights. Write the Albanian version first; the English version is
+      optional and appears when a visitor switches the site to EN.
+    folder: JMC-main/frontend/src/content/insights
+    extension: json
+    format: json
+    create: true
+    delete: true
+    identifier_field: title
+    slug: '{{slug}}'
+    summary: '{{date}} — {{title}}'
+    sortable_fields: ['date', 'title']
+    editor:
+      preview: false
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Publication date
+        name: date
+        widget: datetime
+        format: YYYY-MM-DD
+        date_format: YYYY-MM-DD
+        time_format: false
+        picker_utc: true
+        hint: The newest article is featured at the top of Insights and announced on the home page.
+      - label: Category
+        name: category
+        widget: string
+        hint: e.g. “E Drejta Administrative”. Use exactly the same spelling for articles in the same category.
+      - { label: Reading time, name: readTime, widget: string, default: '3 min lexim' }
+      - { label: Author, name: author, widget: string, default: 'Ekipi JMC Legal' }
+      - label: Image
+        name: image
+        widget: image
+        hint: A landscape photo, at least 1600 px wide and under 4 MB. The site shows it in black and white.
+      - label: Image description
+        name: imageAlt
+        widget: string
+        required: false
+        hint: One sentence describing the photo, read aloud to visitors who cannot see it.
+      - label: Summary
+        name: excerpt
+        widget: text
+        hint: Two or three sentences, shown in article lists and on the Instagram card.
+      - label: Article text
+        name: content
+        widget: markdown
+        modes: [rich_text]
+        buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list]
+        editor_components: []
+        hint: The last paragraph is shown as a highlighted quote.
+      - label: Related practice areas
+        name: practiceAreas
+        widget: relation
+        collection: practice
+        file: areas
+        search_fields: ['areas.*.title']
+        display_fields: ['areas.*.title']
+        value_field: 'areas.*.slug'
+        multiple: true
+        required: false
+        hint: Listed beside the article.
+      - label: English version
+        name: en
+        widget: object
+        required: false
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: Leave empty to show the Albanian version to English-language visitors too.
+        fields:
+          - { label: Title, name: title, widget: string, required: false }
+          - { label: Category, name: category, widget: string, required: false }
+          - { label: Reading time, name: readTime, widget: string, required: false, default: '3 min read' }
+          - { label: Author, name: author, widget: string, required: false, default: 'the JMC Legal team' }
+          - { label: Image description, name: imageAlt, widget: string, required: false }
+          - { label: Summary, name: excerpt, widget: text, required: false }
+          - label: Article text
+            name: content
+            widget: markdown
+            required: false
+            modes: [rich_text]
+            buttons: [bold, italic, link, heading-two, bulleted-list, numbered-list]
+            editor_components: []
+
+  # ─── Pages and banners ─────────────────────────────────────────────────────
+  - name: pages
+    label: Pages & banners
+    editor:
+      preview: false
+    files:
+      - name: home
+        label: Home page
+        file: JMC-main/frontend/src/content/pages/home.json
+        fields:
+          - label: Show the “New insight” bar
+            name: showLatestInsight
+            widget: boolean
+            default: true
+            hint: The strip above the banner that links to the newest article.
+          - label: Main banner
+            name: hero
+            widget: object
+            fields:
+              - { label: Image, name: image, widget: image, hint: 'A wide landscape photo. It is shown dark and in black and white behind the title.' }
+              - { label: Title, name: title, widget: string }
+              - { label: Subtitle, name: subtitle, widget: string }
+          - { label: Introduction, name: intro, widget: text, hint: 'The paragraph under the banner.' }
+          - label: Office section
+            name: office
+            widget: object
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Text, name: text, widget: text }
+              - { label: Image, name: image, widget: image }
+              - { label: Image description, name: imageAlt, widget: string, required: false }
+
+      - name: the-firm
+        label: The firm
+        file: JMC-main/frontend/src/content/pages/the-firm.json
+        fields:
+          - { label: Title, name: title, widget: string }
+          - label: Sections
+            name: sections
+            widget: list
+            summary: '{{fields.title}}'
+            hint: Numbered 01, 02, 03… in the order shown here. Drag to reorder.
+            fields:
+              - { label: Heading, name: title, widget: string }
+              - { label: Text, name: body, widget: text }
+          - label: Banner
+            name: banner
+            widget: object
+            fields:
+              - { label: Image, name: image, widget: image }
+              - { label: Text over the image, name: text, widget: string }
+          - label: Panels (Mission, Vision, Values)
+            name: panels
+            widget: list
+            summary: '{{fields.title}}'
+            fields:
+              - { label: Heading, name: title, widget: string }
+              - { label: Text, name: body, widget: text }
+          - { label: Closing line, name: ctaTitle, widget: string }
+
+      - name: practice-areas-page
+        label: Practice areas page
+        file: JMC-main/frontend/src/content/pages/practice-areas.json
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Introduction, name: intro, widget: text, hint: 'Update the numbers here if you add or remove areas or groups.' }
+          - { label: Closing line, name: ctaTitle, widget: text }
+
+  # ─── Practice areas ────────────────────────────────────────────────────────
+  - name: practice
+    label: Practice areas
+    editor:
+      preview: false
+    files:
+      - name: areas
+        label: Practice areas
+        file: JMC-main/frontend/src/content/practice/areas.json
+        fields:
+          - label: Areas
+            name: areas
+            widget: list
+            summary: '{{fields.title}}'
+            collapsed: true
+            hint: Drag to reorder. The order here is the order on the site.
+            fields:
+              - { label: Name, name: title, widget: string }
+              - label: Link name
+                name: slug
+                widget: string
+                pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and hyphens only, e.g. tax-law']
+                hint: Used in web addresses (e.g. /practice-areas#tax-law). Avoid changing it once published.
+              - label: Short Albanian name
+                name: titleSq
+                widget: string
+                hint: Shown beside Albanian articles, e.g. “Tatimet”.
+              - label: Group
+                name: group
+                widget: relation
+                collection: practice
+                file: groups
+                search_fields: ['groups.*.title']
+                display_fields: ['groups.*.title']
+                value_field: 'groups.*.id'
+              - label: For
+                name: audience
+                widget: select
+                multiple: true
+                min: 1
+                options:
+                  - { label: Businesses, value: business }
+                  - { label: Individuals, value: individual }
+              - label: Feature on the home page
+                name: featured
+                widget: boolean
+                default: false
+                hint: Featured areas appear as large tabs on the home page. Four works best.
+              - label: Home page description
+                name: description
+                widget: text
+                hint: Shown on the home page when this area is selected.
+              - label: Summary
+                name: intro
+                widget: text
+                hint: One or two sentences on the Practice areas page.
+              - label: Key services (home page)
+                name: keyServices
+                widget: list
+                max: 4
+                required: false
+                field: { label: Service, name: service, widget: string }
+                hint: Up to four, shown on the home page. If empty, the first four services are used.
+              - label: Services
+                name: services
+                widget: list
+                field: { label: Service, name: service, widget: string }
+
+      - name: groups
+        label: Groups
+        file: JMC-main/frontend/src/content/practice/groups.json
+        fields:
+          - label: Groups
+            name: groups
+            widget: list
+            summary: '{{fields.title}}'
+            hint: Areas are listed under these headings on the Practice areas page, in this order.
+            fields:
+              - { label: Name, name: title, widget: string }
+              - label: ID
+                name: id
+                widget: string
+                pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Lowercase letters, numbers and hyphens only']
+                hint: A short internal name, e.g. corporate. Avoid changing it; areas refer to it.
+
+  # ─── Site settings ─────────────────────────────────────────────────────────
+  - name: settings
+    label: Site settings
+    editor:
+      preview: false
+    files:
+      - name: contact
+        label: Contact details
+        file: JMC-main/frontend/src/content/settings/site.json
+        fields:
+          - { label: Street, name: street, widget: string }
+          - { label: City and postcode, name: city, widget: string }
+          - { label: Country, name: country, widget: string }
+          - { label: Email, name: email, widget: string }
+          - label: Phone numbers
+            name: phones
+            widget: list
+            field: { label: Phone, name: phone, widget: string }
+            hint: The first number is shown in the top bar.
+          - label: Office hours
+            name: hours
+            widget: object
+            fields:
+              - { label: Weekdays, name: weekdays, widget: string }
+              - { label: Saturday, name: saturday, widget: string }
+              - { label: Short version (footer), name: short, widget: string }
+          - { label: LinkedIn page, name: linkedinUrl, widget: string }
+
+      - name: testimonials
+        label: Testimonials
+        file: JMC-main/frontend/src/content/settings/testimonials.json
+        fields:
+          - label: Testimonials
+            name: items
+            widget: list
+            summary: '{{fields.role}}, {{fields.sector}}'
+            required: false
+            hint: >
+              Never include a client’s name. Use the client’s own words, with their written permission.
+              With no testimonials the section is hidden.
+            fields:
+              - { label: Quote, name: quote, widget: text }
+              - { label: Role, name: role, widget: string, hint: 'e.g. General Manager' }
+              - { label: Sector, name: sector, widget: string, hint: 'e.g. energy company' }

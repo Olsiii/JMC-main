@@ -3,9 +3,34 @@
   command = "npm run build"
   publish = "frontend/build"
 
+[functions]
+  # CMS API behind /admin (frontend/netlify/functions/cms.js)
+  directory = "netlify/functions"
+
 [build.environment]
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
+
+# Old URLs (renamed to match the navigation)
+[[redirects]]
+  from = "/about"
+  to = "/the-firm"
+  status = 301
+
+[[redirects]]
+  from = "/blog"
+  to = "/insights"
+  status = 301
+
+[[redirects]]
+  from = "/blog/*"
+  to = "/insights/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/api/cms"
+  to = "/.netlify/functions/cms"
+  status = 200
 
 [[redirects]]
   from = "/*"

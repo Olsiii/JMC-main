@@ -1,144 +1,92 @@
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useState, useCallback } from 'react';
-import usePageMeta from '../hooks/usePageMeta';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, Tag, ChevronRight, Link2, Download, Check } from 'lucide-react';
-import { blogPosts } from '../data/blogPosts';
-import { useLang } from '../context/LanguageContext';
 import ReactMarkdown from 'react-markdown';
+import usePageMeta from '../hooks/usePageMeta';
+import { blogPosts, formatPostDate, localizePost } from '../data/blogPosts';
+import { findPracticeArea } from '../data/practiceAreas';
+import { site } from '../data/site';
+import { useLang } from '../context/LanguageContext';
+import { fade } from '../lib/motion';
+import { renderInstagramCard } from '../lib/instagramCard';
+import { LabelBar } from '../components/LabelBar';
+import { LangToggle } from '../components/LangToggle';
+import { ConsultationBox } from '../components/ConsultationBox';
+import { CtaBand } from '../components/CtaBand';
+import { SectionTitle } from '../components/SectionTitle';
+import { ArticleRow } from '../components/ArticleRow';
+
+const UI = {
+  en: {
+    by: 'By',
+    share: 'Share',
+    copy: 'Copy link',
+    copied: 'Link copied',
+    instagram: 'Download Instagram card',
+    generating: 'Generating…',
+    note: 'Note:',
+    disclaimer: 'This article is for information only and is not legal advice. For your specific case, contact us at',
+    consult: 'Book a consultation',
+    relatedAreas: 'Related areas',
+    ctaTitle: 'Need legal advice on this topic?',
+    allArticles: 'All articles',
+    relatedTitle: 'Related articles',
+    notFound: 'Article not found',
+    notFoundBody: 'This article does not exist or has been removed.',
+    back: 'back to insights',
+  },
+  sq: {
+    by: 'Nga',
+    share: 'Ndaj',
+    copy: 'Kopjo linkun',
+    copied: 'Linku u kopjua',
+    instagram: 'Shkarko kartën për Instagram',
+    generating: 'Duke gjeneruar…',
+    note: 'Shënim:',
+    disclaimer: 'Ky artikull është informues dhe nuk përbën këshillë juridike. Për rastin tuaj konkret, na kontaktoni në',
+    consult: 'Planifikoni një konsultim',
+    relatedAreas: 'Fusha të lidhura',
+    ctaTitle: 'Keni nevojë për këshillë juridike për këtë temë?',
+    allArticles: 'Të gjithë artikujt',
+    relatedTitle: 'Artikuj të ngjashëm',
+    notFound: 'Artikulli nuk u gjet',
+    notFoundBody: 'Ky artikull nuk ekziston ose është hequr.',
+    back: 'kthehu te analizat',
+  },
+};
 
 const mdComponents = {
   h2: ({ children }) => (
-    <h2 className="font-serif text-2xl font-semibold text-[#1A1A1A] mt-10 mb-4">{children}</h2>
+    <h2 className="mb-5 mt-12 font-serif text-[28px] leading-tight text-ink md:text-[32px]">{children}</h2>
   ),
   p: ({ children }) => (
-    <p className="text-[#4A4A4A] leading-relaxed text-lg mb-4">{children}</p>
+    <p className="mb-7 font-serif text-[19px] leading-[1.7] text-ink md:text-[22px]">{children}</p>
   ),
-  strong: ({ children }) => (
-    <strong className="font-semibold text-[#1A1A1A]">{children}</strong>
-  ),
+  strong: ({ children }) => <strong className="font-medium text-ink">{children}</strong>,
   ul: ({ children }) => (
-    <ul className="list-disc list-inside space-y-1 ml-4 my-3">{children}</ul>
+    <ul className="mb-7 list-disc space-y-2 pl-6 font-serif text-[19px] leading-[1.7] text-ink md:text-[22px]">{children}</ul>
   ),
-  li: ({ children }) => (
-    <li className="text-[#4A4A4A] leading-relaxed">{children}</li>
+  ol: ({ children }) => (
+    <ol className="mb-7 list-decimal space-y-2 pl-6 font-serif text-[19px] leading-[1.7] text-ink md:text-[22px]">{children}</ol>
+  ),
+  li: ({ children }) => <li>{children}</li>,
+  a: ({ href, children }) => (
+    <a href={href} className="link-line" {...(/^https?:/.test(href || '') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+      {children}
+    </a>
   ),
 };
 
-const LanguageToggle = () => {
-  const { lang, toggle } = useLang();
-  return (
-    <button
-      onClick={toggle}
-      className="inline-flex items-center rounded-sm border border-[#D4AF37] overflow-hidden text-xs font-semibold uppercase tracking-widest"
-      aria-label="Switch language"
-    >
-      <span
-        className={`px-3 py-1.5 transition-colors duration-200 ${
-          lang === 'sq' ? 'bg-[#D4AF37] text-white' : 'bg-transparent text-[#D4AF37]'
-        }`}
-      >
-        AL
-      </span>
-      <span
-        className={`px-3 py-1.5 transition-colors duration-200 ${
-          lang === 'en' ? 'bg-[#D4AF37] text-white' : 'bg-transparent text-[#D4AF37]'
-        }`}
-      >
-        EN
-      </span>
-    </button>
-  );
+const quoteComponents = {
+  p: ({ children }) => (
+    <p className="font-serif text-[22px] italic leading-[1.45] text-ink md:text-[26px]">{children}</p>
+  ),
 };
 
-// ─── helpers ──────────────────────────────────────────────────────────────────
+// ─── ShareRow ─────────────────────────────────────────────────────────────────
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  const words = text.split(' ');
-  let line = '';
-  let currentY = y;
-  for (let i = 0; i < words.length; i++) {
-    const testLine = line + words[i] + ' ';
-    if (ctx.measureText(testLine).width > maxWidth && i > 0) {
-      ctx.fillText(line.trim(), x, currentY);
-      line = words[i] + ' ';
-      currentY += lineHeight;
-    } else {
-      line = testLine;
-    }
-  }
-  ctx.fillText(line.trim(), x, currentY);
-  return currentY;
-}
-
-function generateInstagramCard(title, excerpt, category, url) {
-  const SIZE = 1080;
-  const GOLD = '#D4AF37';
-  const DARK = '#1A1A1A';
-  const MID  = '#2B2B2B';
-  const LIGHT = '#F8F5F0';
-  const PAD = 80;
-
-  const canvas = document.createElement('canvas');
-  canvas.width = SIZE;
-  canvas.height = SIZE;
-  const ctx = canvas.getContext('2d');
-
-  // Background
-  ctx.fillStyle = DARK;
-  ctx.fillRect(0, 0, SIZE, SIZE);
-
-  // Bottom light panel
-  ctx.fillStyle = LIGHT;
-  ctx.fillRect(0, SIZE * 0.62, SIZE, SIZE * 0.38);
-
-  // Gold top bar
-  ctx.fillStyle = GOLD;
-  ctx.fillRect(0, 0, SIZE, 12);
-
-  // Gold left accent bar (tall)
-  ctx.fillStyle = GOLD;
-  ctx.fillRect(PAD, 80, 6, 340);
-
-  // Category label
-  ctx.fillStyle = GOLD;
-  ctx.font = 'bold 32px Georgia, serif';
-  ctx.letterSpacing = '4px';
-  ctx.fillText(category.toUpperCase(), PAD + 30, 130);
-
-  // Title
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 64px Georgia, serif';
-  const titleBottom = wrapText(ctx, title, PAD + 30, 210, SIZE - PAD * 2 - 30, 80) + 80;
-
-  // Divider
-  ctx.fillStyle = GOLD;
-  ctx.fillRect(PAD, Math.min(titleBottom, SIZE * 0.58), 60, 4);
-
-  // Excerpt (on light background)
-  const excerptY = SIZE * 0.64 + 20;
-  ctx.fillStyle = '#4A4A4A';
-  ctx.font = '34px Georgia, serif';
-  wrapText(ctx, excerpt, PAD, excerptY, SIZE - PAD * 2, 50);
-
-  // URL / branding footer
-  ctx.fillStyle = MID;
-  ctx.fillRect(0, SIZE - 100, SIZE, 100);
-
-  ctx.fillStyle = GOLD;
-  ctx.font = 'bold 28px Arial, sans-serif';
-  ctx.fillText('JMC LEGAL', PAD, SIZE - 52);
-
-  ctx.fillStyle = '#9A9A9A';
-  ctx.font = '24px Arial, sans-serif';
-  ctx.fillText(url, PAD + 220, SIZE - 52);
-
-  return canvas;
-}
-
-// ─── ShareButtons ─────────────────────────────────────────────────────────────
-
-const ShareButtons = ({ title, excerpt, category, lang }) => {
+// card: { title, excerpt, category, meta, image } for the Instagram card; fileName for the download.
+const ShareRow = ({ card, fileName, ui }) => {
   const [copied, setCopied] = useState(false);
   const [generating, setGenerating] = useState(false);
 
@@ -162,52 +110,41 @@ const ShareButtons = ({ title, excerpt, category, lang }) => {
     }
   }, [url]);
 
-  const handleInstagram = useCallback(() => {
+  const handleInstagram = useCallback(async () => {
     setGenerating(true);
-    setTimeout(() => {
-      try {
-        const canvas = generateInstagramCard(title, excerpt, category, 'jmclegal.org');
-        const link = document.createElement('a');
-        link.download = 'jmc-legal-post.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      } finally {
-        setGenerating(false);
-      }
-    }, 50);
-  }, [title, excerpt, category]);
+    try {
+      const canvas = await renderInstagramCard(card);
+      const link = document.createElement('a');
+      link.download = fileName;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } finally {
+      setGenerating(false);
+    }
+  }, [card, fileName]);
 
-  const copyLabel   = lang === 'en' ? (copied ? 'Copied!'      : 'Copy Link')          : (copied ? 'U kopjua!'   : 'Kopjo Linkun');
-  const igLabel     = lang === 'en' ? (generating ? 'Generating…' : 'Download') : (generating ? 'Duke gjeneruar…' : 'Shkarko');
+  const linkClass = 'link-line text-[13px] text-ink disabled:opacity-60';
 
   return (
-    <div className="flex flex-wrap items-center gap-3 mt-6">
-      <span className="text-xs uppercase tracking-widest text-gray-400 mr-1">
-        {lang === 'en' ? 'Share:' : 'Ndaj:'}
+    <div className="mt-14 flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-t border-b-line border-t-ink py-5">
+      <span className="label-caps text-[11px] text-ink">{ui.share}</span>
+      <button type="button" onClick={handleCopy} className={linkClass}>
+        {copied ? ui.copied : ui.copy}
+      </button>
+      <a
+        href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={linkClass}
+      >
+        LinkedIn
+      </a>
+      <button type="button" onClick={handleInstagram} disabled={generating} className={linkClass}>
+        {generating ? ui.generating : ui.instagram}
+      </button>
+      <span role="status" className="sr-only">
+        {copied ? ui.copied : ''}
       </span>
-
-      {/* Copy Link */}
-      <button
-        onClick={handleCopy}
-        className={`inline-flex items-center gap-2 px-4 py-2 rounded-sm border text-xs font-semibold uppercase tracking-widest transition-all duration-200 ${
-          copied
-            ? 'bg-[#D4AF37] border-[#D4AF37] text-white'
-            : 'bg-transparent border-gray-500 text-gray-300 hover:border-[#D4AF37] hover:text-[#D4AF37]'
-        }`}
-      >
-        {copied ? <Check className="w-3.5 h-3.5" /> : <Link2 className="w-3.5 h-3.5" />}
-        {copyLabel}
-      </button>
-
-      {/* Instagram image download */}
-      <button
-        onClick={handleInstagram}
-        disabled={generating}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-sm border border-gray-500 text-gray-300 hover:border-[#D4AF37] hover:text-[#D4AF37] text-xs font-semibold uppercase tracking-widest transition-all duration-200 disabled:opacity-60"
-      >
-        <Download className="w-3.5 h-3.5" />
-        {igLabel}
-      </button>
     </div>
   );
 };
@@ -216,209 +153,153 @@ const ShareButtons = ({ title, excerpt, category, lang }) => {
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const navigate = useNavigate();
   const { lang } = useLang();
+  const ui = UI[lang] || UI.en;
 
   const post = blogPosts.find((p) => p.slug === slug);
-  const t = post && lang === 'en' && post.en ? post.en : post;
+  const p = post && localizePost(post, lang);
 
   usePageMeta(
     post
       ? {
-          title: (t?.title || post.title) + ' | JMC Legal Blog',
-          description: t?.excerpt || post.excerpt,
-          canonical: 'https://jmclegal.org/blog/' + post.slug,
-          ogTitle: t?.title || post.title,
-          ogDescription: t?.excerpt || post.excerpt,
-          ogUrl: 'https://jmclegal.org/blog/' + post.slug,
+          title: p.title + ' | JMC Legal Insights',
+          description: p.excerpt,
+          canonical: 'https://jmclegal.org/insights/' + post.slug,
+          ogTitle: p.title,
+          ogDescription: p.excerpt,
+          ogUrl: 'https://jmclegal.org/insights/' + post.slug,
           ogType: 'article',
         }
       : {
-          title: 'Article Not Found | JMC Legal Blog',
+          title: 'Article Not Found | JMC Legal Insights',
           description: 'This article does not exist or has been removed.',
-          canonical: 'https://jmclegal.org/blog',
+          canonical: 'https://jmclegal.org/insights',
         }
   );
 
   if (!post) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center px-4">
-        <h1 className="font-serif text-4xl font-bold text-[#1A1A1A] mb-2">Article Not Found</h1>
-        <p className="text-[#4A4A4A] mb-6">This article doesn't exist or has been removed.</p>
-        <Link to="/blog" className="text-[#D4AF37] font-semibold hover:text-[#B59025] transition-colors">
-          Back to Blog
-        </Link>
+      <div>
+        <LabelBar crumbs={[{ label: 'Insights', to: '/insights' }]} />
+        <div className="wrap flex min-h-[50vh] flex-col items-start justify-center py-24">
+          <h1 className="font-serif text-[44px] leading-tight text-ink">{ui.notFound}</h1>
+          <p className="mt-4 text-[15px] text-muted">{ui.notFoundBody}</p>
+          <Link to="/insights" className="link-more mt-8">
+            {ui.back}
+          </Link>
+        </div>
       </div>
     );
   }
 
-  const related = blogPosts
-    .filter((p) => p.slug !== slug && p.category === post.category)
-    .slice(0, 2);
+  // The last paragraph is set as a pull quote.
+  const paragraphs = p.content.trim().split(/\n\s*\n/);
+  const quote = paragraphs.length > 1 ? paragraphs.pop() : null;
+  const body = paragraphs.join('\n\n');
 
-  const ui = {
-    allArticles: lang === 'en' ? 'All Articles' : 'Të Gjitha Artikujt',
-    by: lang === 'en' ? 'By' : 'Nga',
-    ctaTitle: lang === 'en' ? 'Need Legal Advice on This Topic?' : 'Keni Nevojë për Këshillë Juridike?',
-    ctaBody: lang === 'en'
-      ? 'Our attorneys are available to advise you on your specific situation.'
-      : 'Avokatët tanë janë në dispozicion për t\'ju këshilluar për situatën tuaj specifike.',
-    ctaButton: lang === 'en' ? 'Schedule a Consultation' : 'Planifikoni një Konsultim',
-    relatedTitle: lang === 'en' ? 'Related Articles' : 'Artikuj të Ngjashëm',
-    backToAll: lang === 'en' ? 'Back to All Articles' : 'Kthehu tek Të Gjithë Artikujt',
-    disclaimer: lang === 'en'
-      ? 'This article is for informational purposes only and does not constitute legal advice. For advice specific to your situation, please contact the firm at info@jmclegal.org'
-      : 'Ky artikull është vetëm për qëllime informuese dhe nuk përbën këshillë juridike. Për këshilla specifike, kontaktoni zyrën në info@jmclegal.org',
-  };
+  const relatedAreas = (post.practiceAreas || []).map(findPracticeArea).filter(Boolean);
+  const related = blogPosts.filter((rp) => rp.slug !== slug && rp.category === post.category).slice(0, 2);
 
   return (
     <div>
-      {/* Top gradient banner */}
-      <div className="bg-gradient-to-br from-[#1A1A1A] via-[#2B2B2B] to-[#3A3A3A] pt-20 pb-16 px-4">
-        <div className="max-w-3xl mx-auto">
-          {/* Back link + Language toggle */}
-          <div className="flex items-center justify-between mb-8">
-            <button
-              onClick={() => navigate('/blog')}
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-[#D4AF37] text-sm uppercase tracking-widest transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {ui.allArticles}
-            </button>
-            <LanguageToggle />
-          </div>
+      <LabelBar crumbs={[{ label: 'Insights', to: '/insights' }, { label: p.category }]}>
+        <LangToggle variant="block" />
+      </LabelBar>
 
-          {/* Category + date */}
-          <div className="flex flex-wrap items-center gap-4 mb-6">
-            <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
-              <Tag className="w-3 h-3" />
-              {t?.category || post.category}
-            </span>
-            <span className="text-gray-400 text-xs">
-              {new Date(post.date).toLocaleDateString(lang === 'en' ? 'en-GB' : 'sq-AL', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </span>
-            <span className="flex items-center gap-1.5 text-gray-400 text-xs">
-              <Clock className="w-3 h-3" />
-              {t?.readTime || post.readTime}
+      <article lang={lang}>
+        <header className="mx-auto max-w-[760px] px-6 pt-20 md:pt-24">
+          <div className="label-caps flex flex-wrap justify-between gap-x-6 gap-y-2 border-b border-ink pb-3">
+            <span className="text-accent">{p.category}</span>
+            <span className="text-muted">
+              <time dateTime={post.date}>{formatPostDate(post.date, lang)}</time> · {p.readTime}
             </span>
           </div>
-
-          {/* Title */}
-          <motion.h1
-            key={lang}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight"
-          >
-            {t?.title || post.title}
+          <motion.h1 key={lang} {...fade} className="mt-10 font-serif text-[36px] leading-[1.12] text-ink md:text-[52px]">
+            {p.title}
           </motion.h1>
+          <p className="mt-6 text-[13px] text-muted">
+            {ui.by} {p.author}
+          </p>
+        </header>
 
-          {/* Author */}
-          <p className="mt-6 text-gray-400 text-sm">{ui.by} {post.author}</p>
-
-          {/* Share */}
-          <ShareButtons
-            title={t?.title || post.title}
-            excerpt={t?.excerpt || post.excerpt}
-            category={t?.category || post.category}
-            lang={lang}
+        <div className="wrap mt-14">
+          <img
+            src={post.image}
+            alt={p.imageAlt || ''}
+            className="img-treat aspect-[16/9] w-full object-cover md:aspect-[59/20]"
           />
         </div>
-      </div>
 
-      {/* Article body */}
-      <section className="bg-[#F8F5F0] py-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <motion.div
-            key={lang + '-body'}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="bg-white rounded-sm shadow-sm border border-[#E5E5E5] p-8 md:p-12"
-          >
-            {/* Excerpt / lead */}
-            <p className="text-[#4A4A4A] text-xl leading-relaxed font-medium border-l-4 border-[#D4AF37] pl-5 mb-8 italic">
-              {t?.excerpt || post.excerpt}
+        <div className="wrap grid gap-16 pb-24 pt-14 md:pt-16 lg:grid-cols-[minmax(0,700px)_280px] lg:justify-center lg:gap-[72px]">
+          <div className="min-w-0">
+            <motion.div key={`${lang}-body`} {...fade}>
+              <ReactMarkdown components={mdComponents}>{body}</ReactMarkdown>
+              {quote && (
+                <blockquote className="my-12 border-l-2 border-accent pl-6 md:pl-8">
+                  <ReactMarkdown components={quoteComponents}>{quote}</ReactMarkdown>
+                </blockquote>
+              )}
+            </motion.div>
+
+            <ShareRow
+              card={{
+                title: p.title,
+                excerpt: p.excerpt,
+                category: p.category,
+                meta: `${formatPostDate(post.date, lang)} · ${p.readTime}`,
+                image: post.image,
+              }}
+              fileName={`jmc-legal-${post.slug}-${lang}.png`}
+              ui={ui}
+            />
+
+            <p className="mt-6 text-[12px] leading-relaxed text-subtle">
+              <strong className="font-medium text-text">{ui.note}</strong> {ui.disclaimer}{' '}
+              <a href={`mailto:${site.email}`} className="link-line">
+                {site.email}
+              </a>
+              .
             </p>
-
-            {/* Content */}
-            <div className="prose-jmc">
-              <ReactMarkdown components={mdComponents}>
-                {t?.content || post.content}
-              </ReactMarkdown>
-            </div>
-
-            {/* Disclaimer */}
-            <div className="mt-12 p-5 bg-[#F8F5F0] rounded-sm border border-[#E5E5E5] text-xs text-[#9A9A9A] leading-relaxed">
-              <strong className="text-[#4A4A4A]">{lang === 'en' ? 'Disclaimer:' : 'Shënim:'}</strong>{' '}
-              {ui.disclaimer}
-            </div>
-          </motion.div>
-
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mt-10 bg-[#2B2B2B] rounded-sm p-8 text-center"
-          >
-            <h3 className="font-serif text-2xl font-semibold text-white mb-3">
-              {ui.ctaTitle}
-            </h3>
-            <p className="text-gray-400 text-sm mb-6">
-              {ui.ctaBody}
-            </p>
-            <Link
-              to="/contact"
-              className="inline-block bg-[#D4AF37] text-white hover:bg-[#B59025] rounded-sm px-8 py-3 text-sm uppercase tracking-widest font-bold transition-all duration-300"
-            >
-              {ui.ctaButton}
-            </Link>
-          </motion.div>
-
-          {/* Related articles */}
-          {related.length > 0 && (
-            <div className="mt-16">
-              <h3 className="font-serif text-2xl font-semibold text-[#1A1A1A] mb-8">{ui.relatedTitle}</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {related.map((rp) => {
-                  const rt = lang === 'en' && rp.en ? rp.en : rp;
-                  return (
-                    <Link
-                      key={rp.slug}
-                      to={`/blog/${rp.slug}`}
-                      className="group bg-white rounded-sm border border-[#E5E5E5] p-6 hover:border-[#D4AF37]/40 hover:shadow-md transition-all duration-300"
-                    >
-                      <span className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
-                        {rt.category || rp.category}
-                      </span>
-                      <h4 className="font-serif text-lg font-semibold text-[#1A1A1A] mt-2 mb-3 leading-snug group-hover:text-[#D4AF37] transition-colors">
-                        {rt.title || rp.title}
-                      </h4>
-                      <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest text-[#D4AF37]">
-                        {lang === 'en' ? 'Read' : 'Lexo'} <ChevronRight className="w-3 h-3" />
-                      </span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Back to blog */}
-          <div className="mt-12 text-center">
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-2 text-[#4A4A4A] hover:text-[#D4AF37] text-sm uppercase tracking-widest font-semibold transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {ui.backToAll}
-            </Link>
           </div>
+
+          <aside className="flex flex-col gap-8 lg:sticky lg:top-32 lg:self-start">
+            <ConsultationBox label={ui.consult} />
+            {relatedAreas.length > 0 && (
+              <div className="bg-paper p-6 md:p-8">
+                <h2 className="label-caps text-ink">{ui.relatedAreas}</h2>
+                <ul className="mt-4 flex flex-col gap-2.5">
+                  {relatedAreas.map((area) => (
+                    <li key={area.slug}>
+                      <Link to={`/practice-areas#${area.slug}`} className="link-line text-[14px] text-ink">
+                        {lang === 'sq' ? area.titleSq : area.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </aside>
         </div>
-      </section>
+      </article>
+
+      <CtaBand
+        title={ui.ctaTitle}
+        actions={[
+          { to: '/contact', label: ui.consult },
+          { to: '/insights', label: ui.allArticles, outline: true },
+        ]}
+      />
+
+      {related.length > 0 && (
+        <section className="wrap py-24">
+          <SectionTitle>{ui.relatedTitle}</SectionTitle>
+          <div className="mt-12 grid gap-12 md:grid-cols-2">
+            {related.map((rp, i) => (
+              <ArticleRow key={rp.slug} post={rp} index={i + 1} lang={lang} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };

@@ -3,18 +3,19 @@ import { createContext, useContext, useState } from 'react';
 const LanguageContext = createContext(null);
 
 export const LanguageProvider = ({ children }) => {
-  const [lang, setLang] = useState(
+  const [lang, setLangState] = useState(
     () => localStorage.getItem('jmc-lang') || 'sq'
   );
 
-  const toggle = () => {
-    const next = lang === 'sq' ? 'en' : 'sq';
+  const setLang = (next) => {
     localStorage.setItem('jmc-lang', next);
-    setLang(next);
+    setLangState(next);
   };
 
+  const toggle = () => setLang(lang === 'sq' ? 'en' : 'sq');
+
   return (
-    <LanguageContext.Provider value={{ lang, toggle }}>
+    <LanguageContext.Provider value={{ lang, setLang, toggle }}>
       {children}
     </LanguageContext.Provider>
   );

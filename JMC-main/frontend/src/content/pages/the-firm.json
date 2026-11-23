@@ -1,0 +1,36 @@
+{
+  "title": "Justice & Management Consulting",
+  "sections": [
+    {
+      "title": "Who we are",
+      "body": "JMC Legal is a law firm founded by three legal practitioners with more than seven years of work in legal offices and institutional practice. We advise businesses and individuals across Kosovo, and work with Kosovan and foreign clients alike."
+    },
+    {
+      "title": "How we work",
+      "body": "Our services are strategic and results-oriented, built on three things: preventing risk before it becomes a dispute, protecting our clients’ legal position, and representing them effectively when a matter goes before a court or authority."
+    },
+    {
+      "title": "What guides us",
+      "body": "Integrity, precision and confidentiality. We are committed to clear legal solutions and to long-term trust with the people and businesses we represent."
+    }
+  ],
+  "banner": {
+    "image": "/images/Kala.webp",
+    "text": "Prevention · Protection · Representation"
+  },
+  "panels": [
+    {
+      "title": "Mission",
+      "body": "To provide personalised, strategic legal counsel that addresses the specific needs of each client and helps them reach their goals."
+    },
+    {
+      "title": "Vision",
+      "body": "To be recognised as a leading firm in Kosovo for the quality of its work, and to raise the standard of legal services in the region."
+    },
+    {
+      "title": "Values",
+      "body": "Integrity in every relationship, transparent communication, and respect for every client throughout their matter."
+    }
+  ],
+  "ctaTitle": "Discuss a matter with the partners."
+}

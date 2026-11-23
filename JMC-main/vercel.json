@@ -1,3 +1,8 @@
 {
+  "redirects": [
+    { "source": "/about", "destination": "/the-firm", "statusCode": 301 },
+    { "source": "/blog", "destination": "/insights", "statusCode": 301 },
+    { "source": "/blog/:slug*", "destination": "/insights/:slug*", "statusCode": 301 }
+  ],
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

@@ -1,1 +1,9 @@
+# Old URLs (renamed to match the navigation)
+/about     /the-firm          301
+/blog      /insights          301
+/blog/*    /insights/:splat   301
+
+# CMS API (Netlify Function)
+/api/cms   /.netlify/functions/cms   200
+
 /*    /index.html   200
