@@ -129,7 +129,7 @@ const PracticeShowcase = () => {
         Practice areas
       </h2>
       <LabelBar label="Practice areas" link={{ to: '/practice-areas', label: `All ${countWord(practiceAreas.length)} areas ›` }} />
-      <div className="wrap grid gap-12 py-20 md:py-24 lg:grid-cols-[minmax(0,0.66fr)_minmax(0,1fr)] lg:gap-16">
+      <div className="wrap grid grid-cols-[minmax(0,1fr)] gap-12 py-20 md:py-24 lg:grid-cols-[minmax(0,0.66fr)_minmax(0,1fr)] lg:gap-16">
         <Reveal>
           <div role="tablist" aria-orientation="vertical" aria-label="Featured practice areas" onKeyDown={handleKeyDown}>
             {featured.map((a, i) => {
@@ -162,7 +162,7 @@ const PracticeShowcase = () => {
           <p className="mt-6 text-[13px] leading-[2.1] text-muted">
             <span className="mr-2">Also:</span>
             {others.map((a) => (
-              <Link key={a.slug} to={`/practice-areas#${a.slug}`} className="link-line mr-3 whitespace-nowrap text-ink">
+              <Link key={a.slug} to={`/practice-areas#${a.slug}`} className="link-line mr-3 text-ink sm:whitespace-nowrap">
                 {a.title}
               </Link>
             ))}

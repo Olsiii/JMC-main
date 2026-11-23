@@ -118,7 +118,7 @@ const PracticeAreasPage = () => {
             <p aria-live="polite" className="label-caps text-[11px] text-subtle">
               {visible.length} of {practiceAreas.length} areas
             </p>
-            <div role="group" aria-label="Show areas for" className="flex items-center gap-5">
+            <div role="group" aria-label="Show areas for" className="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-x-5">
               <span aria-hidden="true" className="label-caps text-[11px] text-subtle">
                 Show:
               </span>
