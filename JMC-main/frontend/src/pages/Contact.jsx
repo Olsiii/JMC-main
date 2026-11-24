@@ -221,13 +221,13 @@ const ContactPage = () => {
           <Reveal delay={0.1}>
             <div className="h-[360px] w-full border border-line md:h-[420px]">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1467.0072435621705!2d21.162889795624082!3d42.66104839471878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x13549ee0b9d1e245%3A0x7363335099ef3e09!2s46%20Qamil%20Hoxha%2C%20Prishtina%2010000!5e0!3m2!1sen!2s!4v1772722173551!5m2!1sen!2s"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d183.37629394823446!2d21.16407956230802!3d42.66091666838975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x13549f557aef50d7%3A0x70dda409c65524f5!2sJMC%20Legal!5e0!3m2!1sen!2s!4v1795478309246!5m2!1sen!2s"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+                referrerPolicy="strict-origin-when-cross-origin"
                 title="JMC Office Location"
                 className="h-full w-full grayscale"
               />

@@ -7,6 +7,6 @@ export const site = {
   ...data,
   phones: data.phones.map((label) => ({ label, href: `tel:${label.replace(/[^\d+]/g, '')}` })),
   directionsUrl: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-    `${data.street}, ${data.city}, ${data.country}`
+    `JMC Legal, ${data.street}, ${data.city}, ${data.country}`
   )}`,
 };
