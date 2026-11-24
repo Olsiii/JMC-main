@@ -20,7 +20,13 @@ const MobileMenu = ({ onClose }) => {
 
   useEffect(() => {
     closeRef.current?.focus();
-    document.body.style.overflow = 'hidden';
+
+    // Lock the page behind the menu. overflow:hidden alone doesn't stop iOS Safari from scrolling it.
+    const { body, documentElement: html } = document;
+    const scrollY = window.scrollY;
+    const startPath = window.location.pathname;
+    html.style.overflow = 'hidden';
+    Object.assign(body.style, { position: 'fixed', top: `-${scrollY}px`, left: '0', right: '0', width: '100%', overflow: 'hidden' });
 
     const onKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
@@ -40,7 +46,10 @@ const MobileMenu = ({ onClose }) => {
 
     window.addEventListener('keydown', onKeyDown);
     return () => {
-      document.body.style.overflow = '';
+      html.style.overflow = '';
+      Object.assign(body.style, { position: '', top: '', left: '', right: '', width: '', overflow: '' });
+      // Back to where the reader was, unless a menu link took them to a new page.
+      if (window.location.pathname === startPath) window.scrollTo(0, scrollY);
       window.removeEventListener('keydown', onKeyDown);
     };
   }, [onClose]);
@@ -52,7 +61,7 @@ const MobileMenu = ({ onClose }) => {
       role="dialog"
       aria-modal="true"
       aria-label="Menu"
-      className="fixed inset-0 z-50 flex flex-col bg-ink text-white lg:hidden"
+      className="fixed inset-0 z-50 flex h-[100dvh] w-screen flex-col overflow-hidden overscroll-none bg-ink text-white lg:hidden"
       {...fade}
     >
       <div className="wrap flex h-[76px] flex-none items-center justify-between border-b border-white/10">
@@ -70,7 +79,7 @@ const MobileMenu = ({ onClose }) => {
         </button>
       </div>
 
-      <nav aria-label="Main" className="wrap flex-1 overflow-y-auto py-10">
+      <nav aria-label="Main" className="wrap flex-1 overflow-y-auto overscroll-contain py-10">
         <ul>
           {NAV.map((item) => (
             <li key={item.to}>

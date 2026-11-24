@@ -46,11 +46,11 @@ const PracticeAreasPage = () => {
   const [collapsed, setCollapsed] = useState({});
 
   usePageMeta({
-    title: 'Practice areas | JMC Legal — Kosovo Law Firm',
-    description: 'JMC Legal offers expert legal services across corporate law, competition law, tax, labor, energy, family law, litigation, and public procurement in Kosovo.',
+    title: 'Practice areas | JMC Legal — Kosovo Legal Firm',
+    description: 'JMC Legal offers expert legal services across corporate, competition, tax, labor, energy, family, litigation, and public procurement in Kosovo.',
     canonical: 'https://jmclegal.org/practice-areas',
     ogTitle: 'Practice areas | JMC Legal',
-    ogDescription: 'Comprehensive legal services across 9 practice areas — corporate, tax, labor, energy, family law, litigation, and more in Kosovo.',
+    ogDescription: 'Comprehensive legal services across 9 practice areas — corporate, tax, labor, energy, family, litigation, and more in Kosovo.',
   });
 
   const q = normalize(query.trim());
@@ -78,7 +78,7 @@ const PracticeAreasPage = () => {
     <div>
       <LabelBar label="Practice areas" />
 
-      <div className="mx-auto max-w-[1080px] px-6 pb-28 pt-20 md:px-10 md:pt-24">
+      <div className="wrap pb-28 pt-20 md:pt-24">
         <Reveal>
           <h1 className="font-serif text-[44px] leading-[1.05] text-ink md:text-[64px]">{page.title}</h1>
           <p className="mt-6 max-w-[640px] font-serif text-[20px] leading-[1.5] text-ink md:text-[22px]">

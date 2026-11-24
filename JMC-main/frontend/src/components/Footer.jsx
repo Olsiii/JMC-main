@@ -11,7 +11,7 @@ export const Footer = () => (
           <p className="mt-6 leading-relaxed">
             {site.fullName}
             <br />
-            Attorneys at law, Prishtina
+            Legal services, Prishtina
           </p>
         </div>
 

@@ -8,7 +8,7 @@ import page from '../content/pages/the-firm.json';
 const AboutPage = () => {
   usePageMeta({
     title: 'The firm | JMC Legal — Justice & Management Consulting',
-    description: 'Learn about JMC Legal — a professional law firm in Prishtina, Kosovo, founded by three experienced legal practitioners with over seven years of institutional practice.',
+    description: 'Learn about JMC Legal — a professional legal firm in Prishtina, Kosovo, founded by three experienced legal practitioners with over seven years of institutional practice.',
     canonical: 'https://jmclegal.org/the-firm',
     ogTitle: 'The firm | JMC Legal',
     ogDescription: 'Three experienced legal practitioners united by one purpose — delivering clear legal solutions and building long-term trust with clients across Kosovo.',

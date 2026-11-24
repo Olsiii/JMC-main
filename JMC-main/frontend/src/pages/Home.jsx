@@ -159,14 +159,16 @@ const PracticeShowcase = () => {
               );
             })}
           </div>
-          <p className="mt-6 text-[13px] leading-[2.1] text-muted">
-            <span className="mr-2">Also:</span>
-            {others.map((a) => (
-              <Link key={a.slug} to={`/practice-areas#${a.slug}`} className="link-line mr-3 text-ink sm:whitespace-nowrap">
-                {a.title}
-              </Link>
-            ))}
-          </p>
+          <div className="mt-8 flex items-baseline gap-4 text-[13px] leading-[1.6] text-muted">
+            <span className="flex-none">Also:</span>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-4 sm:grid-cols-3">
+              {others.map((a) => (
+                <Link key={a.slug} to={`/practice-areas#${a.slug}`} className="justify-self-start text-ink transition-colors duration-200 hover:text-accent">
+                  {a.title}
+                </Link>
+              ))}
+            </div>
+          </div>
         </Reveal>
 
         <Reveal delay={0.1} className="bg-paper p-8 md:p-12">
@@ -194,10 +196,10 @@ const HomePage = () => {
 
   usePageMeta({
     title: 'JMC | Justice & Management Consulting — Legal Firm in Kosovo',
-    description: 'JMC Legal is a professional law firm in Prishtina, Kosovo, founded by three experienced legal practitioners. Expert services in corporate law, litigation, tax, labor, energy, and more.',
+    description: 'JMC Legal is a professional legal firm in Prishtina, Kosovo, founded by three experienced legal practitioners. Expert legal services in corporate, litigation, tax, labor, energy, and more.',
     canonical: 'https://jmclegal.org/',
     ogTitle: 'JMC | Justice & Management Consulting',
-    ogDescription: 'Your trusted legal partner in Kosovo. Expert legal services in corporate law, litigation, tax, and more.',
+    ogDescription: 'Your trusted legal partner in Kosovo. Expert legal services in corporate, litigation, tax, and more.',
   });
 
   return (

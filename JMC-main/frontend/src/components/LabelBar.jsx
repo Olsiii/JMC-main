@@ -35,7 +35,7 @@ export const LabelBar = ({ label, crumbs, link, children }) => (
     {link && (
       <Link
         to={link.to}
-        className="label-caps absolute inset-y-0 right-0 flex items-center bg-ink px-6 text-white transition-colors duration-200 hover:bg-accent md:px-10"
+        className="label-caps absolute inset-y-0 right-0 flex items-center bg-ink px-5 text-white transition-colors duration-200 hover:bg-accent sm:px-8 lg:px-14"
       >
         {link.label}
       </Link>

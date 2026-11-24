@@ -125,7 +125,7 @@ const ContactPage = () => {
                 <Field id="phone" label="Phone">
                   <input id="phone" type="tel" name="phone" autoComplete="tel" value={formData.phone} onChange={handleChange} className="field mt-2" />
                 </Field>
-                <Field id="area" label="Area of law" className="md:col-span-3">
+                <Field id="area" label="Legal area" className="md:col-span-3">
                   <div className="relative mt-2">
                     <select id="area" name="area" value={formData.area} onChange={handleChange} className="field appearance-none pr-8">
                       <option value="">Select</option>
@@ -162,7 +162,7 @@ const ContactPage = () => {
 
               <div className="mt-10 flex flex-col-reverse gap-6 sm:flex-row sm:items-center sm:justify-between">
                 <p className="max-w-[280px] text-[13px] leading-relaxed text-muted">
-                  Sending this form does not create a lawyer–client relationship.
+                  Sending this form does not create a client relationship with JMC Legal.
                 </p>
                 <button type="submit" disabled={status === 'sending'} className="btn-solid min-w-[150px] disabled:cursor-not-allowed disabled:opacity-60">
                   {status === 'sending' ? 'Sending…' : 'Send'}

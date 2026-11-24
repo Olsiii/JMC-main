@@ -1,7 +1,7 @@
 {
   "areas": [
     {
-      "title": "Corporate Law",
+      "title": "Corporate",
       "slug": "corporate-law",
       "titleSq": "E drejta korporative",
       "group": "corporate",
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "title": "Competition Law",
+      "title": "Competition",
       "slug": "competition-law",
       "titleSq": "Konkurrenca",
       "group": "corporate",
@@ -40,7 +40,7 @@
       "keyServices": [],
       "services": [
         "Unfair trade",
-        "Impact of competition law on your business",
+        "Impact of competition rules on your business",
         "Infrastructure",
         "Representation before the Competition Commission",
         "Abuse of a dominant position",
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "title": "Business & Property Law",
+      "title": "Business & Property",
       "slug": "business-property-law",
       "titleSq": "Biznesi dhe prona",
       "group": "corporate",
@@ -70,7 +70,7 @@
       ]
     },
     {
-      "title": "Tax Law",
+      "title": "Tax",
       "slug": "tax-law",
       "titleSq": "Tatimet",
       "group": "tax",
@@ -97,7 +97,7 @@
       ]
     },
     {
-      "title": "Energy Law",
+      "title": "Energy",
       "slug": "energy-law",
       "titleSq": "Energjia",
       "group": "tax",
@@ -136,7 +136,7 @@
       ]
     },
     {
-      "title": "Labor Law",
+      "title": "Labor",
       "slug": "labor-law",
       "titleSq": "Marrëdhëniet e punës",
       "group": "employment",
@@ -162,7 +162,7 @@
       ]
     },
     {
-      "title": "Family Law",
+      "title": "Family",
       "slug": "family-law",
       "titleSq": "E drejta familjare",
       "group": "employment",

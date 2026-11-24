@@ -22,7 +22,7 @@ export const HelpForm = ({ tone = 'light', className = '', onSubmitted }) => {
       <label htmlFor={id} className="sr-only">
         How can we help you?
       </label>
-      <div className={`focus-box flex items-center border-b ${dark ? 'border-white/40' : 'border-ink'}`}>
+      <div className={`flex items-center border-b ${dark ? 'border-white/40' : 'border-ink'}`}>
         <input
           id={id}
           type="text"
@@ -30,14 +30,14 @@ export const HelpForm = ({ tone = 'light', className = '', onSubmitted }) => {
           onChange={(e) => setText(e.target.value)}
           placeholder="How can we help you?"
           autoComplete="off"
-          className={`w-full min-w-0 bg-transparent py-2 pr-2 ${
+          className={`w-full min-w-0 bg-transparent py-2 pr-2 outline-none focus-visible:outline-none ${
             dark ? 'text-base text-white placeholder:text-white/55' : 'text-[14px] text-ink placeholder:text-subtle'
           }`}
         />
         <button
           type="submit"
           aria-label="Continue to the contact form"
-          className={`flex h-9 w-9 flex-none items-center justify-end transition-colors ${
+          className={`flex h-9 w-9 flex-none items-center justify-end transition-colors focus-visible:outline-none ${
             dark ? 'text-white hover:text-white/70' : 'text-accent hover:text-ink'
           }`}
         >
